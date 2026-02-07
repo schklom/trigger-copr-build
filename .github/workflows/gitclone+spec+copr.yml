@@ -91,6 +91,8 @@ jobs:
             
       - name: Update Last Built Version
         run: |
+          pwd
+          ls ahl
           git config user.name schklom
           git config user.email "23263086+schklom@users.noreply.github.com"
           git add .
