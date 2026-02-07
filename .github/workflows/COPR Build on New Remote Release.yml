@@ -89,6 +89,9 @@ jobs:
 
       - name: Make normal folder not submodule
         run: |
+          # Remove as submodule
+          git rm --cached tirith-clone
+          
           rm -rf tirith-clone/.git
           ls -ahl
           ls -ahl tirith-clone
