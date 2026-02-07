@@ -7,6 +7,9 @@ on:
     paths: '**gitclone+spec+copr.yml'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -84,6 +87,10 @@ jobs:
           echo "${{ needs.check.outputs.REMOTE_TAG }}" > last_built_version
             
       - name: Update Last Built Version
-        uses: stefanzweifel/git-auto-commit-action@v7
-        with:
-          commit_message: "Update git repo + last_built_version to ${{ needs.check.outputs.REMOTE_TAG }} + spec file"
+        run: |
+          git config user.name schklom
+          git config user.email "23263086+schklom@users.noreply.github.com"
+          git add .
+          git commit -m "Updating to ${{ needs.check.outputs.REMOTE_TAG }}"
+          git push
+        # stefanzweifel/git-auto-commit-action@v7 fails in Fedora container
