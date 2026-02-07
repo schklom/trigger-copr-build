@@ -62,6 +62,9 @@ jobs:
 
       - name: Checkout your repo
         uses: actions/checkout@v6
+
+      - name: ls
+        run: ls -ahl
       
       - name: Install tools
         run: |
