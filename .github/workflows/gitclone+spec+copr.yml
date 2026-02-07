@@ -46,11 +46,12 @@ jobs:
   build:
     needs: check
     runs-on: ubuntu-latest
+    container: fedora:latest
     steps:
       - name: Install tools
         run: |
-          sudo apt update
-          sudo apt install -y rust2rpm git
+          sudo dnf update
+          sudo dnf install -y rust2rpm git
 
       - name: Re-clone repo
         run: |
