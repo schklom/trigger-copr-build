@@ -88,7 +88,10 @@ jobs:
           rust2rpm --ignore-missing-license-files tirith
 
       - name: Make normal folder not submodule
-        run: rm -rf tirith-clone/.git
+        run: |
+          rm -rf tirith-clone/.git
+          ls -ahl
+          ls -ahl tirith-clone
 
       # https://docs.pagure.org/copr.copr/user_documentation.html#custom-webhook
       - name: Trigger COPR Build
@@ -104,6 +107,7 @@ jobs:
         run: |
           pwd
           ls -ahl
+          ls -ahl tirith-clone
           
           # Trust the workspace
           git config --global --add safe.directory $GITHUB_WORKSPACE
