@@ -1,0 +1,79 @@
+name: COPR Build on New Remote Release
+
+on:
+  #schedule:
+    #- cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    
+    outputs:
+      LOCAL_TAG: ${{ steps.check.outputs.LOCAL_TAG }}
+      REMOTE_TAG: ${{ steps.check.outputs.REMOTE_TAG }} 
+      TRIGGER_BUILD: ${{ steps.check.outputs.trigger_build }}
+    
+    steps:
+      - name: Checkout your repo
+        uses: actions/checkout@v6
+
+      - name: Check for new release
+        id: check
+        run: |
+          # 1. Get the latest release tag from GitHub API
+          REMOTE_TAG=$(curl -s https://api.github.com/repos/sheeki03/tirith/releases/latest | jq -r '.tag_name')
+          
+          # 2. Read the last built version from a local file (you need to manage this file)
+          if [ -f "last_built_version" ]; then
+            LOCAL_TAG=$(cat last_built_version)
+          else
+            LOCAL_TAG="none"
+          fi
+          
+          echo "Latest: $REMOTE_TAG"
+          echo "Last Built: $LOCAL_TAG"
+          
+          if [ "$REMOTE_TAG" != "$LOCAL_TAG" ]; then
+            echo "New version detected!"
+            echo "new_version=$REMOTE_TAG" >> $GITHUB_OUTPUT
+            echo "trigger_build=true" >> $GITHUB_OUTPUT
+          else
+            echo "No new version."
+            echo "trigger_build=false" >> $GITHUB_OUTPUT
+          fi
+
+  build:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install tools
+        run: |
+          sudo apt update
+          sudo apt install -y rust2rpm git
+
+      - name: Re-clone repo
+        run: |
+          rm -rf tirith || true
+          git clone https://github.com/sheeki03/tirith tirith-clone
+
+      - name: Make spec file
+        run: |
+          cd tirith-clone
+          # rust2rpm .
+          rust2rpm tirith
+
+      # https://docs.pagure.org/copr.copr/user_documentation.html#custom-webhook
+      - name: Trigger COPR Build
+        run: |
+          # https://copr.fedorainfracloud.org/webhooks/custom/<ID>/<UUID>/<PACKAGE_NAME>/
+          curl -X POST ${{ secrets.COPR_WEBHOOK }}
+
+      - name: Save last built version
+        run: |
+          echo "${{ needs.check.outputs.REMOTE_TAG }}" > last_built_version
+            
+      - name: Update Last Built Version
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "Update git repo + last_built_version to ${{ needs.check.outputs.REMOTE_TAG }} + spec file"
