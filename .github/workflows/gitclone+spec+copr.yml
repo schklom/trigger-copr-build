@@ -4,7 +4,7 @@ on:
   #schedule:
     #- cron: '0 0 * * *'
   push:
-    paths: '.github/workflows/gitclone+spec+copr.yml'
+    paths: '**gitclone+spec+copr.yml'
   workflow_dispatch:
 
 jobs:
