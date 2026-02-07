@@ -1,8 +1,8 @@
 name: COPR Build on New Remote Release
 
 on:
-  #schedule:
-    #- cron: '0 0 * * *'
+  schedule:
+    - cron: '0 0 * * *'
   push:
     paths:
       - '.github/workflows/COPR Build on New Remote Release.yml'
