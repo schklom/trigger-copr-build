@@ -127,7 +127,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: repo_and_spec_file
-          path: $GITHUB_WORKSPACE/tirith-clone
+          path: tirith-clone
 
       - name: Save last built version
         run: |
