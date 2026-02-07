@@ -91,8 +91,10 @@ jobs:
           ls -ahl
           
           # Remove as submodule
-          git config --add safe.directory tirith-clone
+          git config --add safe.directory .
           echo "Added safe.directory"
+
+          git status
           
           git rm --cached tirith-clone
           echo "Deleted cache"
