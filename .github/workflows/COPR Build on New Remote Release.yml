@@ -67,13 +67,13 @@ jobs:
       - name: Checkout your repo
         uses: actions/checkout@v6
 
-      - name: ls
-        run: ls -ahl
-
       - name: Re-clone repo
         run: |
-          rm -rf tirith || true
+          rm -rf tirith-clone || true
           git clone --depth 1 https://github.com/sheeki03/tirith tirith-clone
+
+      - name: Apply patches to let COPR do successful builds
+        run: ./patches.sh
 
       - name: Make spec file
         run: |
@@ -90,15 +90,7 @@ jobs:
         run: |
           ls -ahl
           
-          ## Remove as submodule
-          #git config --add safe.directory .
-          #echo "Added safe.directory"
-
-          #git status
-          
           #git rm --cached tirith-clone
-          #echo "Deleted cache"
-
           
           rm -rf tirith-clone/.git
           ls -ahl tirith-clone
