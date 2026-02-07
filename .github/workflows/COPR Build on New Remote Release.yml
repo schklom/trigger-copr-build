@@ -89,11 +89,13 @@ jobs:
 
       - name: Make normal folder not submodule
         run: |
+          ls -ahl
+          
           # Remove as submodule
+          git config --add safe.directory .
           git rm --cached tirith-clone
           
           rm -rf tirith-clone/.git
-          ls -ahl
           ls -ahl tirith-clone
 
       # https://docs.pagure.org/copr.copr/user_documentation.html#custom-webhook
