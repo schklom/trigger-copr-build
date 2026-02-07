@@ -73,7 +73,10 @@ jobs:
       - name: Re-clone repo
         run: |
           rm -rf tirith || true
-          git clone https://github.com/sheeki03/tirith tirith-clone
+          # Don't need everything
+          git clone --depth 1 https://github.com/sheeki03/tirith tirith-clone
+          rm -rf tirith-clone/.git
+
 
       - name: Make spec file
         run: |
