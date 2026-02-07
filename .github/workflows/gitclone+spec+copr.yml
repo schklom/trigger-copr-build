@@ -61,11 +61,12 @@ jobs:
 
       - name: Make spec file
         run: |
-          # Configure dummy git user (still needed inside container)
+          cd tirith-clone
+          
+          # Configure dummy git user for rust2rpm
           git config user.name "Builder"
           git config user.email "builder@example.com"
           
-          cd tirith-clone
           # rust2rpm .
           rust2rpm tirith
 
