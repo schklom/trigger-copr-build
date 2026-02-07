@@ -100,6 +100,10 @@ jobs:
         run: |
           pwd
           ls -ahl
+          
+          # Trust the workspace
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          
           git config user.name schklom
           git config user.email "23263086+schklom@users.noreply.github.com"
           git add .
