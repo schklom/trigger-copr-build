@@ -73,7 +73,7 @@ jobs:
       - name: Re-clone repo
         run: |
           rm -rf tirith || true
-          git clone https://github.com/sheeki03/tirith tirith-clone
+          git clone --depth 1 https://github.com/sheeki03/tirith tirith-clone
 
       - name: Make spec file
         run: |
@@ -90,14 +90,14 @@ jobs:
         run: |
           ls -ahl
           
-          # Remove as submodule
-          git config --add safe.directory .
-          echo "Added safe.directory"
+          ## Remove as submodule
+          #git config --add safe.directory .
+          #echo "Added safe.directory"
 
-          git status
+          #git status
           
-          git rm --cached tirith-clone
-          echo "Deleted cache"
+          #git rm --cached tirith-clone
+          #echo "Deleted cache"
 
           
           rm -rf tirith-clone/.git
@@ -109,6 +109,25 @@ jobs:
           # https://copr.fedorainfracloud.org/webhooks/custom/<ID>/<UUID>/<PACKAGE_NAME>/
           curl -X POST ${{ secrets.COPR_WEBHOOK }}
 
+      - name: Upload files as artifacts for non-container job
+        uses: actions/upload-artifact@v4
+        with:
+          name: repo_and_spec_file
+          path: tirith-clone/
+
+      
+  commit:
+    needs:
+      - check
+      - build
+    if: needs.check.outputs.TRIGGER_BUILD == 'true'
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: repo_and_spec_file
+
       - name: Save last built version
         run: |
           echo "${{ needs.check.outputs.REMOTE_TAG }}" > last_built_version
@@ -118,13 +137,10 @@ jobs:
           pwd
           ls -ahl
           ls -ahl tirith-clone
-          
-          # Trust the workspace
-          git config --global --add safe.directory $GITHUB_WORKSPACE
-          
-          git config user.name schklom
-          git config user.email "23263086+schklom@users.noreply.github.com"
-          git add .
-          git commit -m "Updating to ${{ needs.check.outputs.REMOTE_TAG }}"
-          git push
-        # stefanzweifel/git-auto-commit-action@v7 fails in Fedora container
+      
+      - name: Commit files
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "Updating to ${{ needs.check.outputs.REMOTE_TAG }}"
+          #file_pattern: 
+          tag_name: "${{ needs.check.outputs.REMOTE_TAG }}"
