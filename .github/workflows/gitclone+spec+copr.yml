@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     
     outputs:
-      LOCAL_TAG: ${{ steps.check.outputs.LOCAL_TAG }}
-      REMOTE_TAG: ${{ steps.check.outputs.REMOTE_TAG }} 
-      TRIGGER_BUILD: ${{ steps.check.outputs.trigger_build }}
+      LOCAL_TAG: ${{ steps.check.outputs.SETLOCAL_TAG }}
+      REMOTE_TAG: ${{ steps.check.outputs.SETREMOTE_TAG }} 
+      TRIGGER_BUILD: ${{ steps.check.outputs.SETtrigger_build }}
     
     steps:
       - name: Checkout your repo
@@ -35,18 +35,21 @@ jobs:
           
           echo "Latest: $REMOTE_TAG"
           echo "Last Built: $LOCAL_TAG"
+
+          echo "SETLOCAL_TAG=$LOCAL_TAG" >> $GITHUB_OUTPUT
           
           if [ "$REMOTE_TAG" != "$LOCAL_TAG" ]; then
             echo "New version detected!"
-            echo "new_version=$REMOTE_TAG" >> $GITHUB_OUTPUT
-            echo "trigger_build=true" >> $GITHUB_OUTPUT
+            echo "SETREMOTE_TAG=$REMOTE_TAG" >> $GITHUB_OUTPUT
+            echo "SETtrigger_build=true" >> $GITHUB_OUTPUT
           else
             echo "No new version."
-            echo "trigger_build=false" >> $GITHUB_OUTPUT
+            echo "SETtrigger_build=false" >> $GITHUB_OUTPUT
           fi
 
   build:
     needs: check
+    if: needs.check.outputs.TRIGGER_BUILD == 'true'
     runs-on: ubuntu-latest
     container: fedora:latest
     steps:
