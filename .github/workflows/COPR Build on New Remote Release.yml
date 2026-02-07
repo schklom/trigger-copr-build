@@ -74,7 +74,7 @@ jobs:
         run: |
           rm -rf tirith || true
           # Don't need everything
-          git clone --depth 1 https://github.com/sheeki03/tirith tirith-clone
+          git clone https://github.com/sheeki03/tirith tirith-clone
 
       - name: Make spec file
         run: |
@@ -86,6 +86,9 @@ jobs:
           
           # rust2rpm .
           rust2rpm --ignore-missing-license-files tirith
+
+      - name: Make normal folder not submodule
+        run: rm -rf tirith-clone/.git
 
       # https://docs.pagure.org/copr.copr/user_documentation.html#custom-webhook
       - name: Trigger COPR Build
