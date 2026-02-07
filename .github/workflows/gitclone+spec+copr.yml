@@ -4,7 +4,7 @@ on:
   #schedule:
     #- cron: '0 0 * * *'
   push:
-    paths: ".github/workflows/gitclone+spec+copr.yml"
+    paths: '.github/workflows/gitclone+spec+copr.yml'
   workflow_dispatch:
 
 jobs:
@@ -68,7 +68,7 @@ jobs:
           git config user.email "builder@example.com"
           
           # rust2rpm .
-          rust2rpm tirith
+          rust2rpm --ignore-missing-license-files tirith
 
       # https://docs.pagure.org/copr.copr/user_documentation.html#custom-webhook
       - name: Trigger COPR Build
