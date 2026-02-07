@@ -50,8 +50,7 @@ jobs:
     steps:
       - name: Install tools
         run: |
-          sudo dnf update
-          sudo dnf install -y rust2rpm git
+          dnf install -y rust2rpm git
 
       - name: Re-clone repo
         run: |
