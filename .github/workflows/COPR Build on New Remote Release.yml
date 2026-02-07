@@ -73,7 +73,6 @@ jobs:
       - name: Re-clone repo
         run: |
           rm -rf tirith || true
-          # Don't need everything
           git clone https://github.com/sheeki03/tirith tirith-clone
 
       - name: Make spec file
@@ -92,8 +91,12 @@ jobs:
           ls -ahl
           
           # Remove as submodule
-          git config --add safe.directory .
+          git config --add safe.directory tirith-clone
+          echo "Added safe.directory"
+          
           git rm --cached tirith-clone
+          echo "Deleted cache"
+
           
           rm -rf tirith-clone/.git
           ls -ahl tirith-clone
