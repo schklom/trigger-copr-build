@@ -5,7 +5,7 @@ on:
     #- cron: '0 0 * * *'
   push:
     paths:
-      - '.github/workflows/gitclone+spec+copr.yml'
+      - '.github/workflows/COPR Build on New Remote Release.yml'
     branches:
       - main
   workflow_dispatch:
