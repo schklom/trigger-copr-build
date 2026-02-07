@@ -59,6 +59,10 @@ jobs:
     runs-on: ubuntu-latest
     container: fedora:latest
     steps:
+
+      - name: Checkout your repo
+        uses: actions/checkout@v6
+      
       - name: Install tools
         run: |
           dnf install -y rust2rpm git
