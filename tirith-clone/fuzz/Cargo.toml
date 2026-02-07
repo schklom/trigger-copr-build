@@ -1,0 +1,50 @@
+[package]
+name = "tirith-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+tirith-core = { path = "../crates/tirith-core" }
+
+[workspace]
+members = ["."]
+
+[[bin]]
+name = "url_parser"
+path = "fuzz_targets/url_parser.rs"
+doc = false
+
+[[bin]]
+name = "tokenizer_posix"
+path = "fuzz_targets/tokenizer_posix.rs"
+doc = false
+
+[[bin]]
+name = "tokenizer_fish"
+path = "fuzz_targets/tokenizer_fish.rs"
+doc = false
+
+[[bin]]
+name = "tokenizer_powershell"
+path = "fuzz_targets/tokenizer_powershell.rs"
+doc = false
+
+[[bin]]
+name = "extractor"
+path = "fuzz_targets/extractor.rs"
+doc = false
+
+[[bin]]
+name = "normalizer"
+path = "fuzz_targets/normalizer.rs"
+doc = false
+
+[[bin]]
+name = "byte_scanner"
+path = "fuzz_targets/byte_scanner.rs"
+doc = false
