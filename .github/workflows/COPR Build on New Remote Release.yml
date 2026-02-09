@@ -102,7 +102,7 @@ jobs:
           curl -X POST ${{ secrets.COPR_WEBHOOK }}
 
       - name: Upload files as artifacts for non-container job
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: repo_and_spec_file
           path: tirith-clone
